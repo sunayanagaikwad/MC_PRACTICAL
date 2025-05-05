@@ -1,0 +1,52 @@
+//client//
+import socket
+
+Server_ip = "localhost"
+Server_port = 8002
+FORMAT = "utf-8"
+
+CS = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+CS.connect((Server_ip, Server_port))
+
+file = open("abc.txt", "r")
+data = file.read()
+
+CS.send("abc.txt".encode())
+msg = CS.recv(1024)
+print("[Server]:", msg.decode())
+
+CS.send(data.encode(FORMAT))
+msg = CS.recv(1024)
+print("[Server]:", msg.decode())
+
+
+//server//
+
+
+
+import socket
+
+Server_ip = "localhost"
+Server_port = 8002
+FORMAT = "utf-8"
+SS = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+SS.bind((Server_ip, Server_port))
+SS.listen(5)
+print(f"[*] Server is listening on {Server_ip}:{Server_port}")
+
+s1, addr = SS.accept()
+print(f"[+] Connection accepted from {addr}")
+ 
+file_name = s1.recv(1024).decode(FORMAT)
+print(f"[+] Receiving file name: {file_name}")
+ 
+file = open(file_name, "w")
+s1.send("File name received".encode())
+s
+data = s1.recv(1024).decode(FORMAT)
+print("[+] Receiving file data...")
+file.write(data)
+file.close()
+
+s1.send("File data received".encode())
+print("[+] File transfer complete.")
